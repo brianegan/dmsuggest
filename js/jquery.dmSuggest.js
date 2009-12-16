@@ -9,16 +9,22 @@
  *
  * Revision: $Id: jquery.autocomplete.js 15 2009-08-22 10:30:27Z joern.zaefferer $
  */
+ 
+/*
+ *  jQuery dmSuggest plugin 1.0
+ *  Copyright (c) 2009 Brian Egan
+ *  Updated / Modified Version of jQuery Autocomplete made to work with dmBridge
+ *  Licensed under the MIT licence: http://www.opensource.org/licenses/mit-license.php
+ */
 
 ;(function($) {
 	
 $.fn.extend({
-	autocomplete: function(urlOrData, options) {
-		var isUrl = typeof urlOrData == "string";
+	dmSuggest: function(options) {
 		options = $.extend({}, $.Autocompleter.defaults, {
-			url: isUrl ? urlOrData : null,
-			data: isUrl ? null : urlOrData,
-			delay: isUrl ? $.Autocompleter.defaults.delay : 10,
+			url: '/api/1/vocabulary/suggest.json',
+			data: null,
+			delay: $.Autocompleter.defaults.delay,
 			max: options && !options.scroll ? 10 : 150
 		}, options);
 		
@@ -405,9 +411,9 @@ $.Autocompleter = function(input, options) {
 };
 
 $.Autocompleter.defaults = {
-	inputClass: "ac_input",
-	resultsClass: "ac_results",
-	loadingClass: "ac_loading",
+	inputClass: "dmSuggestInput",
+	resultsClass: "dmSuggestResults",
+	loadingClass: "dmSuggestLoading",
 	minChars: 1,
 	delay: 400,
 	matchCase: false,
@@ -576,7 +582,7 @@ $.Autocompleter.Cache = function(options) {
 
 $.Autocompleter.Select = function (options, input, select, config) {
 	var CLASSES = {
-		ACTIVE: "ac_over"
+		ACTIVE: "dmSuggestActive"
 	};
 	
 	var listItems,
@@ -671,7 +677,7 @@ $.Autocompleter.Select = function (options, input, select, config) {
 			var formatted = options.formatItem(data[i].data, i+1, max, data[i].value, term);
 			if ( formatted === false )
 				continue;
-			var li = $("<li/>").html( options.highlight(formatted, term) ).addClass(i%2 == 0 ? "ac_even" : "ac_odd").appendTo(list)[0];
+			var li = $("<li/>").html( options.highlight(formatted, term) ).addClass(i%2 == 0 ? "dmSuggestEven" : "dmSuggestOdd").appendTo(list)[0];
 			$.data(li, "ac_data", data[i]);
 		}
 		listItems = list.find("li");
