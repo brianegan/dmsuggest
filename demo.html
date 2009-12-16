@@ -7,7 +7,7 @@
 
 	<title>dmSuggest Demo Page</title>
 
-	<link rel="stylesheet" type="text/css" href="css/jsonSuggest.css" />
+	<link rel="stylesheet" type="text/css" href="css/jquery.autocomplete.css" />
 	
 </head>
 
@@ -15,48 +15,30 @@
 	<label for="search">Search</label> <input type="text" name="search" value="" id="search">
 
 <script type="text/javascript" language="Javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
-<script src="js/jquery.jsonSuggest.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/jquery.autocomplete.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
-	$('input#search').jsonSuggest(
-		function(text, wildCard, caseSensitive, notCharacter) {
-			
-			var results = {};
-			results.url = "/api/1/vocabulary/suggest.jsonp?CISOFIELD1=title&CISOROOT=/hughes&CISOBOX1=" + text;	
-			
-			function makeCall() {
-				$.ajax({
-				  url: results.url,
-				  dataType: "jsonp",
-				  success: function (data) {
-					results.suggestions = [];
-					for (var i = 0, j = data.dmBridgeResponse.vocabulary.length; i < j; i++) {
-						results.suggestions[i] = {text: data.dmBridgeResponse.vocabulary[i]};
-				    }
-				  }
-				});
-				
-				return results.suggestions;
-			}
-			
-			return makeCall();
-			
-			/* $.ajax({
-			  url: results.url,
-			  dataType: "jsonp",
-			async: false,
-			  success: function (data) {
-				results.suggestions = [];
-				for (var i = 0, j = data.dmBridgeResponse.vocabulary.length; i < j; i++) {
-					results.suggestions[i] = {text: data.dmBridgeResponse.vocabulary[i]};
-			    }
-			    
-			  }
-			});
+	$('input#search').autocomplete("/api/1/vocabulary/suggest.json?CISOFIELD1=title&CISOROOT=/hughes", {
+		extraParams: {
+			CISOBOX1: function () { return $("input#search").val() }
+		},
+		parse: function(data) {
+		        var parsed = [];
+		        data = data.dmBridgeResponse.vocabulary;
 
-			return results.suggestions; */
-			
-		}, {ajaxResults:true});
-	
+		        for (var i = 0; i < data.length; i++) {
+		            parsed[parsed.length] = {
+		                data: data[i],
+		                value: data[i],
+		                result: data[i]
+		            };
+		        }
+
+		        return parsed;
+		    },
+		formatItem: function(item) {
+			return item;
+		}
+	});
 </script>
 </body>
 </html>

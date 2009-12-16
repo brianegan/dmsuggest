@@ -388,7 +388,7 @@ $.Autocompleter = function(input, options) {
 		for (var i=0; i < rows.length; i++) {
 			var row = $.trim(rows[i]);
 			if (row) {
-				row = row.split("|");
+				row = row.split("|"); 
 				parsed[parsed.length] = {
 					data: row,
 					value: row[0],
@@ -417,7 +417,12 @@ $.Autocompleter.defaults = {
 	cacheLength: 10,
 	max: 100,
 	mustMatch: false,
-	extraParams: {},
+	CISOFIELD: "title",
+	CISOROOT: "",
+	dataType: "json",
+	extraParams: {
+	    q: ''
+	},
 	selectFirst: true,
 	formatItem: function(row) { return row[0]; },
 	formatMatch: null,
